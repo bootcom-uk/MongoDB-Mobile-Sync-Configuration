@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Controls.Inputs;assembly=Controls"
+             x:Class="SyncConfiguration.Views.Authentication.LoginPage" Title="Sign in">
+  <ScrollView>
+    <VerticalStackLayout Padding="24,48" MaximumWidthRequest="480" HorizontalOptions="Fill" Spacing="24">
+      <Image Source="bootcom_logo.png" HeightRequest="72" Aspect="AspectFit" HorizontalOptions="Center" />
+      <VerticalStackLayout Spacing="8">
+        <Label Text="Sync configuration" Style="{StaticResource PageTitle}" HorizontalTextAlignment="Center" />
+        <Label Text="Choose your environment and sign in to manage application sync." Style="{StaticResource MutedText}" HorizontalTextAlignment="Center" />
+      </VerticalStackLayout>
+      <Border Style="{StaticResource Card}">
+        <VerticalStackLayout Spacing="16">
+          <Label Text="Environment" Style="{StaticResource FieldLabel}" />
+          <Picker Title="Choose an environment" ItemsSource="{Binding AppUrlDataSource}" SelectedItem="{Binding SelectedAppUrl}" ItemDisplayBinding="{Binding Name}" />
+          <controls:Entry x:Name="EmailAddress" Title="Email address" EntryKeyboard="Email" ValidationRequired="True" Text="{Binding EmailAddress}" ValidationType="EMAIL" />
+          <Button Text="Send sign-in code" IsEnabled="{Binding Valid, Source={x:Reference EmailAddress}}" Command="{Binding LoginCommand}" />
+          <Label Text="We’ll email you a sign-in code. If you’re new, an account will be created when you sign in." Style="{StaticResource MutedText}" />
+        </VerticalStackLayout>
+      </Border>
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

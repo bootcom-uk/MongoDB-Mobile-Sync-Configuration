@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:controls="clr-namespace:Controls.Inputs;assembly=Controls"
+             xmlns:viewModels="clr-namespace:SyncConfiguration.ViewModels.Authentication"
+             x:Class="SyncConfiguration.Views.Authentication.AuthenticateEmailPage"
+             x:DataType="viewModels:AuthenticateEmailPageViewModel" Title="Check your email">
+  <Grid>
+    <ScrollView>
+      <VerticalStackLayout Padding="24,48" MaximumWidthRequest="480" HorizontalOptions="Fill" Spacing="24">
+        <Image Source="bootcom_logo.png" HeightRequest="72" Aspect="AspectFit" HorizontalOptions="Center" />
+        <VerticalStackLayout Spacing="8">
+          <Label Text="Check your email" Style="{StaticResource PageTitle}" HorizontalTextAlignment="Center" />
+          <Label Text="Enter the code from your sign-in email to continue." Style="{StaticResource MutedText}" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+        <Border Style="{StaticResource Card}">
+          <VerticalStackLayout Spacing="20">
+            <Label Text="Sign-in code" Style="{StaticResource FieldLabel}" />
+            <controls:CodeInputView x:Name="quickAccessCode" Code="{Binding QuickAccessCode}" />
+            <Button Text="Sign in" IsEnabled="{Binding CodeComplete, Source={x:Reference quickAccessCode}}" Command="{Binding CompleteSignInCommand}" />
+            <Label Text="The email may take a moment to arrive. Check your junk folder if you don’t see it." Style="{StaticResource MutedText}" />
+          </VerticalStackLayout>
+        </Border>
+      </VerticalStackLayout>
+    </ScrollView>
+    <popup:SfPopup x:Name="sfPopup" ShowCloseButton="False" IsVisible="{Binding OpenPopup}" IsOpen="{Binding OpenPopup}" AnimationMode="Zoom" HeaderTitle="Sending your code">
+      <popup:SfPopup.ContentTemplate>
+        <DataTemplate>
+          <VerticalStackLayout Padding="24" Spacing="16">
+            <ActivityIndicator IsRunning="True" />
+            <Label Text="Preparing your sign-in email…" HorizontalTextAlignment="Center" />
+          </VerticalStackLayout>
+        </DataTemplate>
+      </popup:SfPopup.ContentTemplate>
+    </popup:SfPopup>
+  </Grid>
+</ContentPage>

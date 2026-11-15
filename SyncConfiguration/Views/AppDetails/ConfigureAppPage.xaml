@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:expander="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             x:Name="configureAppPage" x:Class="SyncConfiguration.Views.AppDetails.ConfigureAppPage" Title="Configure application">
+  <Grid Padding="24,20" RowDefinitions="Auto,*,Auto" RowSpacing="16" MaximumWidthRequest="1120" HorizontalOptions="Fill">
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+      <VerticalStackLayout Spacing="4">
+        <Label Text="Configure application" Style="{StaticResource PageTitle}" />
+        <Label Text="{Binding EditedAppDetail.AppName}" Style="{StaticResource MutedText}" />
+      </VerticalStackLayout>
+      <Button Grid.Column="1" Text="Save changes" Command="{Binding SaveCommand}" VerticalOptions="Center" />
+    </Grid>
+    <ScrollView Grid.Row="1">
+      <VerticalStackLayout Spacing="24">
+        <Border Style="{StaticResource Card}">
+          <expander:SfExpander IsExpanded="True">
+            <expander:SfExpander.Header>
+              <Label Text="Application settings" Style="{StaticResource SectionTitle}" Padding="0,4,0,12" />
+            </expander:SfExpander.Header>
+            <expander:SfExpander.Content>
+              <Grid x:Name="DetailsGrid" SizeChanged="DetailsGrid_SizeChanged" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="16" ColumnSpacing="24" Padding="0,8,0,0">
+                <VerticalStackLayout x:Name="NamePanel" Spacing="6">
+                  <Label Text="Application name" Style="{StaticResource FieldLabel}" />
+                  <Entry TextChanged="Entry_TextChanged" Text="{Binding EditedAppDetail.AppName}" Placeholder="e.g. HOME-APP" SemanticProperties.Description="Application name" />
+                </VerticalStackLayout>
+                <VerticalStackLayout x:Name="DescriptionPanel" Grid.Column="1" Spacing="6">
+                  <Label Text="Description" Style="{StaticResource FieldLabel}" />
+                  <Editor Text="{Binding EditedAppDetail.AppDescription}" HeightRequest="80" AutoSize="TextChanges" SemanticProperties.Description="Application description" />
+                </VerticalStackLayout>
+                <VerticalStackLayout x:Name="EndpointPanel" Grid.Row="1" Spacing="6">
+                  <Label Text="Sync endpoint" Style="{StaticResource FieldLabel}" />
+                  <Entry Text="{Binding EditedAppDetail.Endpoint}" Keyboard="Url" Placeholder="https://…" SemanticProperties.Description="Sync endpoint" />
+                </VerticalStackLayout>
+                <VerticalStackLayout x:Name="TokenPanel" Grid.Row="1" Grid.Column="1" Spacing="6">
+                  <Label Text="Bearer token" Style="{StaticResource FieldLabel}" />
+                  <Entry Text="{Binding EditedAppDetail.BearerToken}" IsPassword="True" SemanticProperties.Description="Bearer token" />
+                </VerticalStackLayout>
+                <VerticalStackLayout x:Name="RefreshPanel" Grid.Row="2" Spacing="6">
+                  <Label Text="Full refresh after inactivity" Style="{StaticResource FieldLabel}" />
+                  <HorizontalStackLayout Spacing="10">
+                    <editors:SfNumericEntry Value="{Binding EditedAppDetail.FullRefreshIfNoActivityInDays}" CustomFormat="n0" WidthRequest="100" MinimumHeightRequest="44" SemanticProperties.Description="Days of inactivity before a full refresh" />
+                    <Label Text="days" VerticalOptions="Center" Style="{StaticResource MutedText}" />
+                  </HorizontalStackLayout>
+                </VerticalStackLayout>
+              </Grid>
+            </expander:SfExpander.Content>
+          </expander:SfExpander>
+        </Border>
+        <VerticalStackLayout Spacing="6">
+          <Label Text="Collections &amp; fields" Style="{StaticResource SectionTitle}" />
+          <Label Text="Select a collection to include all its fields. Clear individual fields to leave them out." Style="{StaticResource MutedText}" />
+        </VerticalStackLayout>
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding DataSource}" Spacing="16">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="16">
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Spacing="4">
+                      <Label Text="{Binding DatabaseName}" Style="{StaticResource SectionTitle}" LineBreakMode="WordWrap" />
+                      <Label Text="{Binding Collections.Count, StringFormat='{0} collections available'}" Style="{StaticResource MutedText}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Add collection" Style="{StaticResource SecondaryButton}" VerticalOptions="Center"
+                            Command="{Binding BindingContext.AddNewCollectionCommand, Source={x:Reference configureAppPage}}" CommandParameter="{Binding .}" />
+                  </Grid>
+                  <VerticalStackLayout BindableLayout.ItemsSource="{Binding Collections}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                      <DataTemplate>
+                        <Border Style="{StaticResource Card}" Padding="12,6">
+                          <expander:SfExpander IsExpanded="{Binding IsSelected, Mode=OneWay}">
+                            <expander:SfExpander.Header>
+                              <Grid ColumnDefinitions="40,*" ColumnSpacing="8" Padding="0,4">
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" SemanticProperties.Description="{Binding CollectionName, StringFormat='Synchronize all fields in {0}'}" />
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                  <Label Text="{Binding CollectionName}" FontAttributes="Bold" />
+                                  <Label Text="{Binding Fields.Count, StringFormat='{0} fields available'}" Style="{StaticResource MutedText}" />
+                                </VerticalStackLayout>
+                              </Grid>
+                            </expander:SfExpander.Header>
+                            <expander:SfExpander.Content>
+                              <VerticalStackLayout Spacing="12" Padding="8,8,8,12">
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Fields}" Spacing="2">
+                                  <BindableLayout.EmptyView><Label Text="No fields found. Empty collections may not have a discoverable schema." Style="{StaticResource MutedText}" /></BindableLayout.EmptyView>
+                                  <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                      <Grid ColumnDefinitions="40,*,Auto" ColumnSpacing="8" MinimumHeightRequest="40">
+                                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" SemanticProperties.Description="{Binding Name, StringFormat='Synchronize field {0}'}" />
+                                        <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" LineBreakMode="WordWrap" />
+                                        <Label Grid.Column="2" Text="{Binding Type.Type}" Style="{StaticResource MutedText}" VerticalOptions="Center" MaximumWidthRequest="160" />
+                                      </Grid>
+                                    </DataTemplate>
+                                  </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <expander:SfExpander>
+                                  <expander:SfExpander.Header><Label Text="Add a field manually" Style="{StaticResource MutedText}" Padding="8,10" /></expander:SfExpander.Header>
+                                  <expander:SfExpander.Content>
+                                    <VerticalStackLayout Spacing="8" Padding="8">
+                                      <Entry Placeholder="Field name" Text="{Binding NewFieldName}" SemanticProperties.Description="New field name" />
+                                      <Picker Title="Field type" ItemsSource="{Binding AvailableFieldTypes}" SelectedItem="{Binding NewFieldType}" />
+                                      <Button Text="Add field" Style="{StaticResource SecondaryButton}" Command="{Binding AddFieldCommand}" HorizontalOptions="Start" />
+                                    </VerticalStackLayout>
+                                  </expander:SfExpander.Content>
+                                </expander:SfExpander>
+                                <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween">
+                                <Button Text="Generate C# models" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8"
+                                        Command="{Binding BindingContext.GenerateModelsCommand, Source={x:Reference configureAppPage}}" CommandParameter="{Binding .}" />
+                                <Button Text="Force resync" Style="{StaticResource SecondaryButton}" Margin="0,0,0,8"
+                                        IsEnabled="{Binding BindingContext.IsSyncing, Source={x:Reference configureAppPage}}"
+                                        Command="{Binding BindingContext.ResyncCollectionCommand, Source={x:Reference configureAppPage}}" CommandParameter="{Binding .}" />
+                                </FlexLayout>
+                              </VerticalStackLayout>
+                            </expander:SfExpander.Content>
+                          </expander:SfExpander>
+                        </Border>
+                      </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                  </VerticalStackLayout>
+                </VerticalStackLayout>
+              </Border>
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+      </VerticalStackLayout>
+    </ScrollView>
+    <Label Grid.Row="2" Text="{Binding SchemaStatus}" Style="{StaticResource MutedText}" />
+  </Grid>
+</ContentPage>

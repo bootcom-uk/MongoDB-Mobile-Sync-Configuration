@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="appsPage" Title="Applications" x:Class="SyncConfiguration.Views.MainPage">
+  <Grid Padding="24" RowDefinitions="Auto,*" RowSpacing="24" MaximumWidthRequest="1120" HorizontalOptions="Fill">
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+      <VerticalStackLayout Spacing="6">
+        <Label Text="Applications" Style="{StaticResource PageTitle}" />
+        <Label Text="Manage the data each app synchronizes." Style="{StaticResource MutedText}" />
+      </VerticalStackLayout>
+      <Button Grid.Column="1" Text="Add application" Command="{Binding ModifyAppCommand}" VerticalOptions="Center" />
+    </Grid>
+    <CollectionView Grid.Row="1" ItemsSource="{Binding AppDetailService.AppDetails}" SelectionMode="None">
+      <CollectionView.EmptyView>
+        <VerticalStackLayout Padding="32" Spacing="10" VerticalOptions="Center">
+          <Label Text="No applications yet" Style="{StaticResource SectionTitle}" HorizontalTextAlignment="Center" />
+          <Label Text="Add an application to choose its databases, collections and fields." Style="{StaticResource MutedText}" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+      </CollectionView.EmptyView>
+      <CollectionView.ItemTemplate>
+        <DataTemplate>
+          <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20">
+              <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding AppName}" Style="{StaticResource SectionTitle}" />
+                <Label Text="{Binding AppDescription}" Style="{StaticResource MutedText}" LineBreakMode="WordWrap" />
+                <Label Text="{Binding Collections.Count, StringFormat='{0} collections configured'}" Style="{StaticResource MutedText}" />
+              </VerticalStackLayout>
+              <Button Grid.Column="1" Text="Configure" Style="{StaticResource SecondaryButton}" VerticalOptions="Center"
+                      Command="{Binding BindingContext.ModifyAppCommand, Source={x:Reference appsPage}}" CommandParameter="{Binding .}" />
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </CollectionView.ItemTemplate>
+    </CollectionView>
+  </Grid>
+</ContentPage>
