@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="BootCom-MongoDB-Sync-Models" Version="1.2.60" />
+    <Compile Include="../../SyncConfiguration/Models/AppDetail/EditCollectionModel.cs" Link="EditCollectionModel.cs" />
+    <Compile Include="../../SyncConfiguration/Models/AppDetail/EditFieldModel.cs" Link="EditFieldModel.cs" />
+    <Compile Include="../../SyncConfiguration/Services/CodeGeneration/*.cs" Link="CodeGeneration/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

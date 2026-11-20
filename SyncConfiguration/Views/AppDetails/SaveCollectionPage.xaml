@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sfDataGrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:sfListView="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             xmlns:sfTreeView="clr-namespace:Syncfusion.Maui.TreeView;assembly=Syncfusion.Maui.TreeView"
+             xmlns:viewModels="clr-namespace:SyncConfiguration.ViewModels.AppDetails"
+             x:Class="SyncConfiguration.Views.AppDetails.SaveCollectionPage"
+             Title="SaveCollectionPage">
+
+  <ContentPage.Content>
+
+    <Grid
+      RowSpacing="10"
+      ColumnSpacing="10">
+
+      <Grid.RowDefinitions>
+        <RowDefinition
+          Height="Auto" />
+        <RowDefinition
+          Height="*" />
+      </Grid.RowDefinitions>
+
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition
+          Width="Auto" />
+        <ColumnDefinition
+          Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <Label
+        Grid.Row="0"
+        Grid.Column="0"
+        Text="Collection Name:" />
+
+      <Entry
+        Grid.Row="0"
+        Grid.Column="1"
+        Text="{Binding CollectionName}" />
+
+      <sfTreeView:SfTreeView
+        x:Name="SchemaTree"
+        ItemsSource="{Binding RootFields}"
+        ChildPropertyName="Children"
+        AutoExpandMode="AllNodesExpanded"
+        ExpanderWidth="20">
+
+        <sfTreeView:SfTreeView.ItemTemplate>
+          <DataTemplate>
+            <HorizontalStackLayout Spacing="10" Padding="5">
+              <!-- Toggle -->
+              <CheckBox IsChecked="{Binding IsSelected}" />
+
+              <!-- Field name -->
+              <Label Text="{Binding Name}" VerticalOptions="Center" />
+
+              <!-- Field type -->
+              <Picker ItemsSource="{Binding Source={x:Reference SchemaTree}, Path=BindingContext.AvailableTypes}"
+                SelectedItem="{Binding Type}"
+                WidthRequest="120"/>
+
+              <!-- Add child button -->
+              <Button Text="+" 
+                FontSize="Small"
+                Command="{Binding AddChildCommand}" 
+                WidthRequest="30" HeightRequest="30" />
+            </HorizontalStackLayout>
+          </DataTemplate>
+        </sfTreeView:SfTreeView.ItemTemplate>
+      </sfTreeView:SfTreeView>
+
+    </Grid>
+   
+  </ContentPage.Content>
+  
+</ContentPage>

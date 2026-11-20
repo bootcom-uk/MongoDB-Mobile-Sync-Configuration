@@ -1,0 +1,27 @@
+﻿using MongoDB.Bson;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace SyncConfiguration.Models
+{
+    public class CustomId
+    {
+        [JsonPropertyName("timestamp")]
+        public long Timestamp { get; set; }
+
+        [JsonPropertyName("creationTime")]
+        public string CreationTime { get; set; }
+
+        public CustomId(ObjectId objectId)
+        {
+            Timestamp = objectId.Timestamp;
+            CreationTime = objectId.CreationTime.ToUniversalTime().ToString("o"); // Ensures consistency
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+
+    }
+}

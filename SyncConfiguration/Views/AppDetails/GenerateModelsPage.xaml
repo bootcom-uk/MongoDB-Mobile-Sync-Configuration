@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:expander="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
+             x:Class="SyncConfiguration.Views.AppDetails.GenerateModelsPage" Title="Generate C# models">
+  <Grid Padding="24,20" RowDefinitions="Auto,*,Auto" RowSpacing="16" MaximumWidthRequest="1120" HorizontalOptions="Fill">
+    <VerticalStackLayout Spacing="4">
+      <Label Text="Generate C# models" Style="{StaticResource PageTitle}" />
+      <Label Text="{Binding CollectionTitle}" Style="{StaticResource MutedText}" />
+    </VerticalStackLayout>
+    <ScrollView Grid.Row="1">
+      <VerticalStackLayout Spacing="16">
+        <Border Style="{StaticResource Card}">
+          <expander:SfExpander>
+            <expander:SfExpander.Header>
+              <VerticalStackLayout Spacing="4" Padding="0,4">
+                <Label Text="Model settings" Style="{StaticResource SectionTitle}" />
+                <Label Text="Class name, namespace, field selection and optional sample JSON" Style="{StaticResource MutedText}" />
+              </VerticalStackLayout>
+            </expander:SfExpander.Header>
+            <expander:SfExpander.Content>
+          <VerticalStackLayout Spacing="12">
+            <Label Text="Collection classes inherit BaseLocalCacheModel. Nested objects inherit ObservableObject; lists use ObservableCollection&lt;T&gt;." Style="{StaticResource MutedText}" />
+            <Label Text="Class name" Style="{StaticResource FieldLabel}" />
+            <Entry Text="{Binding ClassName}" Placeholder="e.g. ShoppingList" />
+            <Label Text="Namespace" Style="{StaticResource FieldLabel}" />
+            <Entry Text="{Binding TargetNamespace}" Placeholder="e.g. Home.App.Models.Data" />
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+              <CheckBox IsChecked="{Binding SelectedFieldsOnly}" SemanticProperties.Description="Generate selected sync fields only" />
+              <Label Grid.Column="1" Text="Selected sync fields only" VerticalOptions="Center" />
+            </Grid>
+            <expander:SfExpander>
+              <expander:SfExpander.Header><Label Text="Integration settings" Style="{StaticResource FieldLabel}" Padding="0,8" /></expander:SfExpander.Header>
+              <expander:SfExpander.Content>
+                <VerticalStackLayout Spacing="8" Padding="0,8">
+                  <Label Text="BaseLocalCacheModel namespace" Style="{StaticResource FieldLabel}" />
+                  <Entry Text="{Binding BaseNamespace}" />
+                  <Label Text="Local collection mapping (leave blank to omit the attribute)" Style="{StaticResource FieldLabel}" />
+                  <Entry Text="{Binding CollectionMapping}" />
+                  <Label Text="Uses LiteDB.ObjectId, matching your local cache models. Id is inherited, not generated again." Style="{StaticResource MutedText}" />
+                </VerticalStackLayout>
+              </expander:SfExpander.Content>
+            </expander:SfExpander>
+            <expander:SfExpander>
+              <expander:SfExpander.Header><Label Text="Paste sample JSON (optional)" Style="{StaticResource FieldLabel}" Padding="0,8" /></expander:SfExpander.Header>
+              <expander:SfExpander.Content>
+                <VerticalStackLayout Spacing="8" Padding="0,8">
+                  <Label Text="If the schema omits fields inside a list, paste a representative document or array of documents. Only field names and types are used; sample values are not exported or sent to the server." Style="{StaticResource MutedText}" />
+                  <Editor Text="{Binding SampleJson}" HeightRequest="180" Placeholder="Paste JSON or MongoDB Extended JSON here" FontFamily="{OnPlatform WinUI=Consolas, Default=monospace}" />
+                </VerticalStackLayout>
+              </expander:SfExpander.Content>
+            </expander:SfExpander>
+            <Button Text="Generate" Command="{Binding GenerateCommand}" HorizontalOptions="Start" />
+          </VerticalStackLayout>
+            </expander:SfExpander.Content>
+          </expander:SfExpander>
+        </Border>
+        <Border Style="{StaticResource Card}" IsVisible="{Binding HasReviewNotes}">
+          <VerticalStackLayout Spacing="8">
+            <Label Text="Review before use" Style="{StaticResource SectionTitle}" />
+            <Label Text="{Binding ReviewNotes}" Style="{StaticResource MutedText}" />
+          </VerticalStackLayout>
+        </Border>
+        <Border Style="{StaticResource Card}" IsVisible="{Binding HasOutput}">
+          <VerticalStackLayout Spacing="12">
+            <Label Text="Generated classes" Style="{StaticResource SectionTitle}" />
+            <Picker Title="Choose a class" ItemsSource="{Binding Files}" ItemDisplayBinding="{Binding FileName}" SelectedItem="{Binding SelectedFile}" />
+            <FlexLayout Wrap="Wrap" Direction="Row" AlignItems="Center">
+              <Button Text="Copy class" Command="{Binding CopyClassCommand}" Margin="0,0,8,8" />
+              <Button Text="Copy all classes" Style="{StaticResource SecondaryButton}" Command="{Binding CopyAllCommand}" Margin="0,0,8,8" />
+              <Button Text="Export .cs files (ZIP)" Style="{StaticResource SecondaryButton}" Command="{Binding ExportZipCommand}" Margin="0,0,0,8" />
+            </FlexLayout>
+            <Editor Text="{Binding PreviewCode, Mode=OneWay}" IsReadOnly="True" HeightRequest="480" FontSize="13" FontFamily="{OnPlatform WinUI=Consolas, Default=monospace}" SemanticProperties.Description="Generated C sharp class preview" />
+          </VerticalStackLayout>
+        </Border>
+      </VerticalStackLayout>
+    </ScrollView>
+    <Label Grid.Row="2" Text="{Binding Status}" Style="{StaticResource MutedText}" />
+  </Grid>
+</ContentPage>

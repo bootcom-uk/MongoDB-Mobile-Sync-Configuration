@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:convertors="clr-namespace:SyncConfiguration.Convertors"
+             xmlns:sfPopup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             x:Class="SyncConfiguration.Controls.Popups.LoadingPopup">
+  <ContentView.Resources>
+    <ResourceDictionary>
+      <convertors:PercentageToScreenHeightConvertor
+x:Key="percentageToScreenHeightConvertor" />
+      <convertors:PercentageToScreenWidthConverter
+x:Key="percentageToScreenWidthConverter" />
+    </ResourceDictionary>
+  </ContentView.Resources>
+
+  <ContentView.Content>
+
+    <sfPopup:SfPopup
+      x:Name="sfPopup"
+      BindingContext="{Binding BindingContext, Source={RelativeSource Mode=TemplatedParent}}"
+      IsOpen="{Binding IsProcessing}"
+      IsVisible="{Binding IsProcessing}"
+      AnimationMode="Fade"
+      AnimationEasing="SinInOut"
+      AnimationDuration="500"
+      ShowCloseButton="True"
+      OverlayMode="Blur"
+      WidthRequest="{Binding PopupWidth, Converter={StaticResource percentageToScreenWidthConverter}}"
+      HeightRequest="{Binding PopupHeight, Converter={StaticResource percentageToScreenHeightConvertor}}">
+
+      <sfPopup:SfPopup.ContentTemplate>
+
+        <DataTemplate>
+
+          <Grid>
+            <Label
+              Grid.Row="0"
+              Text="{Binding ProcessingMessage}" />
+          </Grid>
+
+
+
+        </DataTemplate>
+
+      </sfPopup:SfPopup.ContentTemplate>
+
+    </sfPopup:SfPopup>
+  </ContentView.Content>
+</ContentView>
