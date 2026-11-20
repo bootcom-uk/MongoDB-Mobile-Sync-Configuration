@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MongoDB.Sync.Models;
 using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ namespace SyncConfiguration.Models.AppDetail
         private string collectionName;
 
         [ObservableProperty]
-        private string databaseName;    
+        private string databaseName;
 
         // Changed from List<T> to ObservableCollection<T> so UI updates instantly
         [ObservableProperty]
@@ -21,6 +21,9 @@ namespace SyncConfiguration.Models.AppDetail
 
         [ObservableProperty]
         private bool isSelected;
+
+        /// <summary>Gets or sets the optional expiry draft for this collection.</summary>
+        public string? Expiry { get; set; }
 
         private bool updatingSelection;
 

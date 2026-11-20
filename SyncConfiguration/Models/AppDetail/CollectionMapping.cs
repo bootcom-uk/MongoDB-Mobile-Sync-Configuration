@@ -1,4 +1,4 @@
-﻿namespace SyncConfiguration.Models.AppDetail
+namespace SyncConfiguration.Models.AppDetail
 {
     public class CollectionMapping
     {
@@ -8,6 +8,9 @@
         public required string DatabaseName { get; set; }
 
         public List<string> Fields { get; set; }
+
+        /// <summary>Gets or sets the optional cache-expiry expression.</summary>
+        public string? Expiry { get; set; }
 
         public int Version { get; set; }
 

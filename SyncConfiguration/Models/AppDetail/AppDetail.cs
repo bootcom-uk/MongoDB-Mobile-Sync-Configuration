@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using SyncConfiguration.Convertors;
 using System.Text.Json.Serialization;
@@ -52,6 +52,7 @@ namespace SyncConfiguration.Models.AppDetail
                     DatabaseName = collection.DatabaseName,
                     CollectionName = collection.CollectionName,
                     Fields = collection.Fields?.ToList() ?? [],
+                    Expiry = collection.Expiry,
                     Version = collection.Version
                 });
             }

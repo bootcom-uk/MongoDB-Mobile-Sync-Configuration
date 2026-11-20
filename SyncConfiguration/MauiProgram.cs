@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.Messaging;
 using Maui.Android.InAppUpdates;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +21,10 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+#if DEBUG
+        if (Environment.GetEnvironmentVariable("SYNC_CRITERIA_PREVIEW") == "1")
+            return Diagnostics.CriteriaPreview.CreateApp();
+#endif
         var builder = MauiApp.CreateBuilder();
 
         var assembly = Assembly.GetExecutingAssembly();

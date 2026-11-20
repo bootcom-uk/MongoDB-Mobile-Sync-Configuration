@@ -104,6 +104,7 @@
                                   </expander:SfExpander.Content>
                                 </expander:SfExpander>
                                 <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween">
+                                <Button Text="Configure expiry" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" Clicked="ConfigureExpiry_Clicked" />
                                 <Button Text="Generate C# models" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8"
                                         Command="{Binding BindingContext.GenerateModelsCommand, Source={x:Reference configureAppPage}}" CommandParameter="{Binding .}" />
                                 <Button Text="Force resync" Style="{StaticResource SecondaryButton}" Margin="0,0,0,8"
@@ -124,6 +125,6 @@
         </VerticalStackLayout>
       </VerticalStackLayout>
     </ScrollView>
-    <Label Grid.Row="2" Text="{Binding SchemaStatus}" Style="{StaticResource MutedText}" />
+    <VerticalStackLayout Grid.Row="2"><Label Text="{Binding SchemaStatus}" Style="{StaticResource MutedText}" /><Label Text="{Binding ExpiryStatus}" Style="{StaticResource MutedText}" /></VerticalStackLayout>
   </Grid>
 </ContentPage>

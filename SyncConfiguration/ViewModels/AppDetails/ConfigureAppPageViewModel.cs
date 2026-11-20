@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Extensions;
 using MongoDB.Bson;
@@ -19,6 +19,10 @@ namespace SyncConfiguration.ViewModels.AppDetails
 
         [ObservableProperty]
         private ObservableCollection<EditDatabaseModel> dataSource;
+
+        /// <summary>Gets or sets validation feedback for collection expiry rules.</summary>
+        [ObservableProperty]
+        private string expiryStatus;
 
         private AppDetail _originalAppDetail;
 
@@ -84,7 +88,7 @@ namespace SyncConfiguration.ViewModels.AppDetails
             EditedAppDetail.Collections = EditedAppDetail.Collections.OrderBy(item => item.CollectionName).ToList();
 
             DataSource = await PrepareEditingDataSource(await AppDetailService.GetSchema(), _originalAppDetail);
-            
+
         }
 
         [RelayCommand]
@@ -126,6 +130,14 @@ namespace SyncConfiguration.ViewModels.AppDetails
             if (DataSource == null || !string.IsNullOrEmpty(SchemaStatus))
                 return;
 
+            ExpiryStatus = string.Empty;
+            foreach (var collection in DataSource.SelectMany(database => database.Collections).Where(collection => collection.IsSelected))
+            {
+                if (string.IsNullOrWhiteSpace(collection.Expiry)) continue;
+                var error = new SyncConfiguration.Services.Expiry.ExpiryEditorDocument { Text = collection.Expiry }
+                    .Validate(collection.Fields.Where(field => field.IsSelected).Select(field => field.Name));
+                if (error is not null) { ExpiryStatus = $"{collection.CollectionName}: {error}"; return; }
+            }
             EditedAppDetail.Collections.Clear();
 
             if(DataSource != null)
@@ -140,6 +152,7 @@ namespace SyncConfiguration.ViewModels.AppDetails
                             {
                                 DatabaseName = item.DatabaseName,
                                 CollectionName = collection.CollectionName,
+                                Expiry = collection.Expiry,
                                 Fields = collection.Fields.Where(item => item.IsSelected).Select(item => item.Name).ToList(),
                                 Version = _originalAppDetail.Collections.FirstOrDefault(mapping => mapping.DatabaseName == item.DatabaseName && mapping.CollectionName == collection.CollectionName)?.Version ?? 0
                             });
@@ -147,7 +160,7 @@ namespace SyncConfiguration.ViewModels.AppDetails
                     }
                 }
             }
-            
+
 
             var editedContent = JsonSerializer.Serialize(EditedAppDetail);
             var originalContent = JsonSerializer.Serialize(_originalAppDetail);
@@ -219,6 +232,7 @@ namespace SyncConfiguration.ViewModels.AppDetails
                 if (parentCollection != null)
                 {
                     collection.RestoreSelection(parentCollection.Fields);
+                    collection.Expiry = parentCollection.Expiry;
                 }
             }
 

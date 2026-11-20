@@ -7,6 +7,13 @@ public partial class ConfigureAppPage : ContentPage
 		InitializeComponent();
 	}
 
+    /// <summary>Opens an isolated expiry draft for the selected collection.</summary>
+    private async void ConfigureExpiry_Clicked(object sender, EventArgs e)
+    {
+        if (sender is Button { BindingContext: SyncConfiguration.Models.AppDetail.EditCollectionModel collection })
+            await Navigation.PushModalAsync(new NavigationPage(new ExpiryEditorPage(collection)));
+    }
+
     private void DetailsGrid_SizeChanged(object sender, EventArgs e)
     {
         var wide = DetailsGrid.Width >= 680;
