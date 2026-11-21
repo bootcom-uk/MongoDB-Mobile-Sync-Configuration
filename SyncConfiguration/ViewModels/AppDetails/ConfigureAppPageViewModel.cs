@@ -133,6 +133,8 @@ namespace SyncConfiguration.ViewModels.AppDetails
             ExpiryStatus = string.Empty;
             foreach (var collection in DataSource.SelectMany(database => database.Collections).Where(collection => collection.IsSelected))
             {
+                try { MongoDB.Sync.Filtering.SyncFilterRule.Validate(collection.Filter); }
+                catch (FormatException ex) { ExpiryStatus = $"{collection.CollectionName}: {ex.Message}"; return; }
                 if (string.IsNullOrWhiteSpace(collection.Expiry)) continue;
                 var error = new SyncConfiguration.Services.Expiry.ExpiryEditorDocument { Text = collection.Expiry }
                     .Validate(collection.Fields.Where(field => field.IsSelected).Select(field => field.Name));
@@ -153,6 +155,7 @@ namespace SyncConfiguration.ViewModels.AppDetails
                                 DatabaseName = item.DatabaseName,
                                 CollectionName = collection.CollectionName,
                                 Expiry = collection.Expiry,
+                                Filter = collection.Filter,
                                 Fields = collection.Fields.Where(item => item.IsSelected).Select(item => item.Name).ToList(),
                                 Version = _originalAppDetail.Collections.FirstOrDefault(mapping => mapping.DatabaseName == item.DatabaseName && mapping.CollectionName == collection.CollectionName)?.Version ?? 0
                             });
@@ -233,6 +236,7 @@ namespace SyncConfiguration.ViewModels.AppDetails
                 {
                     collection.RestoreSelection(parentCollection.Fields);
                     collection.Expiry = parentCollection.Expiry;
+                    collection.Filter = parentCollection.Filter;
                 }
             }
 
