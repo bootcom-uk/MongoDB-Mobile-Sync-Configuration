@@ -104,6 +104,7 @@
                                   </expander:SfExpander.Content>
                                 </expander:SfExpander>
                                 <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween">
+                                <Button Text="Configure filter" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" Clicked="ConfigureFilter_Clicked" />
                                 <Button Text="Configure expiry" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" Clicked="ConfigureExpiry_Clicked" />
                                 <Button Text="Generate C# models" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8"
                                         Command="{Binding BindingContext.GenerateModelsCommand, Source={x:Reference configureAppPage}}" CommandParameter="{Binding .}" />

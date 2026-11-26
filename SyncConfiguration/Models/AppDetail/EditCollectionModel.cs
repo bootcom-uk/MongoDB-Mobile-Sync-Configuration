@@ -25,6 +25,9 @@ namespace SyncConfiguration.Models.AppDetail
         /// <summary>Gets or sets the optional expiry draft for this collection.</summary>
         public string? Expiry { get; set; }
 
+        /// <summary>Gets or sets the server-enforced visibility filter.</summary>
+        public string? Filter { get; set; }
+
         private bool updatingSelection;
 
         partial void OnIsSelectedChanged(bool value)

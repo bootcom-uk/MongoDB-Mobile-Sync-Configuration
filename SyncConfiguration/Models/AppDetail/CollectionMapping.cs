@@ -12,6 +12,9 @@ namespace SyncConfiguration.Models.AppDetail
         /// <summary>Gets or sets the optional cache-expiry expression.</summary>
         public string? Expiry { get; set; }
 
+        /// <summary>Gets or sets the server-enforced visibility filter.</summary>
+        public string? Filter { get; set; }
+
         public int Version { get; set; }
 
     }
